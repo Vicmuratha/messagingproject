@@ -1,87 +1,144 @@
-# Messaging System (COMP 440 Project)
 
-A simple web-based messaging system built using **PHP, MySQL, HTML, CSS, and JavaScript**. It allows users to sign up, log in, send messages, and log out. This project demonstrates basic client-server architecture and session handling in PHP.
+# 📬 Messaging System Project
 
-## 🔧 Features
+This is a simple client-server messaging system built with **PHP**, **MySQL**, **HTML/CSS/JS**, and **PHP Sessions**. It includes:
 
-- User Sign-up with email validation
-- User Login with password verification
-- Session management using PHP sessions
-- Bulk messaging interface
-- Message sending (stored in MySQL database)
-- Logout functionality
-- Simple JSON API responses for frontend communication
+- ✅ User sign-up and login
+- ✅ Session-based authentication
+- ✅ Sending bulk messages
+- ✅ Logout functionality
+- ✅ MySQL database integration
 
-## 🗂️ Project Structure
+---
+
+## 📁 Project Structure
 
 ```
-/messaging-system
-│
-├── index.html              # Landing or login page
-├── signup.html             # Signup form
-├── dashboard.html          # Message form (after login)
-├── style.css               # Stylesheet
-├── script.js               # JS for frontend logic
-├── login.php               # Login backend
-├── signup.php              # Signup backend
-├── send_message.php        # Message-sending backend
-├── logout.php              # Logout logic
-├── db.php                  # Database connection script
-├── init.sql                # MySQL database structure (optional)
-└── README.md               # This file
+messaging_system/
+├── config.php
+├── signup.php
+├── login.php
+├── logout.php
+├── send_message.php
+├── index.html
+├── dashboard.html
+├── styles.css
+├── scripts.js
+└── README.md
 ```
 
-## ⚙️ Setup Instructions (Local)
+---
 
-### Requirements:
-- PHP (use XAMPP)
-- MySQL (phpMyAdmin)
-- Web browser
+## ⚙️ Requirements
 
-### Steps:
+- PHP 7+
+- MySQL Server (or phpMyAdmin)
+- Apache server (XAMPP, WAMP, MAMP, or native LAMP)
+- Modern web browser
 
-1. **Clone or download** this repo and extract it into your `htdocs` (if using XAMPP).
-2. Start **Apache** and **MySQL** from XAMPP Control Panel.
-3. Open [phpMyAdmin](http://localhost/phpmyadmin) and create a new database:
+---
 
-   ```sql
-   CREATE DATABASE messaging_system;
-   ```
+## 🛠 Setup Instructions
 
-4. Import the provided `init.sql` file (or create a `users` and `messages` table as shown below).
-5. Edit `db.php` and update with your MySQL credentials:
+### Option 1: Using **phpMyAdmin**
 
-   ```php
-   $host = 'localhost';
-   $dbname = 'messaging_system';
-   $user = 'root';
-   $pass = 'your_password';
-   ```
-
-6. Access the project in your browser:
-
-   ```
-   http://localhost/messaging-system/
-   ```
-
-## 💾 SQL Structure (Example)
-
-You can create the tables using this SQL:
+1. Start Apache and MySQL from XAMPP/WAMP/MAMP.
+2. Open [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
+3. Create a new database named: `messaging_system`
+4. Run the following SQL to create tables:
 
 ```sql
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100),
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(255)
+  username VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE messages (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  sender_email VARCHAR(100),
-  recipient VARCHAR(100),
-  message TEXT,
-  sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  user_id INT,
+  message TEXT NOT NULL,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 ```
 
+### Option 2: Using **MySQL CLI**
+
+```bash
+mysql -u root -p
+```
+
+Then:
+
+```sql
+CREATE DATABASE messaging_system;
+USE messaging_system;
+
+-- Create users table
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
+);
+
+-- Create messages table
+CREATE TABLE messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  message TEXT NOT NULL,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+---
+
+## 📄 config.php
+
+Create a file named `config.php` in the root directory:
+
+```php
+<?php
+$host = 'localhost';
+$db = 'messaging_system';
+$user = 'root';
+$pass = 'your_password';  // Replace with your actual MySQL password
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+```
+
+---
+
+## 🚀 Running the Project
+
+1. Place the project folder in your server's root (`htdocs` for XAMPP).
+2. Start Apache and MySQL.
+3. Visit `http://localhost/messaging_system/`
+4. Sign up → Log in → Send messages → Log out
+
+---
+
+## 👥 Project Features
+
+- Sign up with unique email and secure password
+- Passwords are hashed before storage
+- Authenticated sessions using PHP
+- Messages linked to users
+- Clean UI (customizable)
+
+---
+
+## 📌 Notes
+
+- You can switch between phpMyAdmin and CLI for database management.
+- Ensure `config.php` credentials match your server setup.
+- Prepared statements recommended for security in production.
