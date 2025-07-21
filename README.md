@@ -1,4 +1,3 @@
-
 # 📬 Messaging System Project
 
 This is a simple client-server messaging system built with **PHP**, **MySQL**, **HTML/CSS/JS**, and **PHP Sessions**. It includes:
