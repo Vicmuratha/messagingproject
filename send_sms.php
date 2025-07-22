@@ -32,10 +32,14 @@ if (strlen($message) > 160) {
 }
 
 // Save messages
-$stmt = $pdo->prepare("INSERT INTO messages (user_id, recipient, message) VALUES (?, ?, ?)");
-foreach ($validPhones as $phone) {
-    $stmt->execute([$_SESSION['user_id'], $phone, $message]);
-}
+try {
+    $stmt = $pdo->prepare("INSERT INTO messages (user_id, recipient, message) VALUES (?, ?, ?)");
+    foreach ($validPhones as $phone) {
+        $stmt->execute([$_SESSION['user_id'], $phone, $message]);
+    }
 
-echo json_encode(['success' => true, 'message' => 'Bulk SMS saved successfully']);
-?>
+    echo json_encode(['success' => true, 'message' => 'Bulk SMS saved successfully']);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+}

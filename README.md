@@ -1,4 +1,3 @@
-
 # 📬 Messaging System Project
 
 This is a simple client-server messaging system built with **PHP**, **MySQL**, **HTML/CSS/JS**, and **PHP Sessions**. It includes:
@@ -58,6 +57,7 @@ CREATE TABLE users (
 CREATE TABLE messages (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
+  recipient VARCHAR(20),
   message TEXT NOT NULL,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
@@ -88,6 +88,7 @@ CREATE TABLE users (
 CREATE TABLE messages (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
+  recipient VARCHAR(20),
   message TEXT NOT NULL,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
@@ -116,7 +117,9 @@ try {
 ?>
 ```
 
----
+## 📄 db.php
+
+Alter the details at `db.php` to match the ones you've entered in `config.php`
 
 ## 🚀 Running the Project
 
